@@ -6,9 +6,12 @@ import java.util.Scanner;
 
 public class AppSL {
     public static void main(String[] args) {
+        //Inicio da aplicação instacia da classe atraves do padrao singleton
         GereciadorDeUsuario userManager = GereciadorDeUsuario.getInstance();
         Scanner scanner = new Scanner(System.in);
-
+        //Sistema de login simples feito do zero registrar,logar,listar e remover usuarios.
+        System.out.println("####Bem-vindo####");
+        System.out.println("Sistema de login simples");
         while (true) {
             System.out.println("1. Register User");
             System.out.println("2. Login User");
