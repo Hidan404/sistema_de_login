@@ -46,29 +46,27 @@ public class GereciadorDeUsuario {
 
     public boolean loginUser(String username, String password) {
         try (Connection conn = ConexaoBancoDeDados.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?")) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String storedHash = rs.getString("password");
-                if (BCrypt.checkpw(password, storedHash)) {
-                    System.out.println("Login successful.");
-                    return true;
-                }
-                else{
-                    System.out.println("Invalid username or password.");
-                    return false;
-                }
-                
+         PreparedStatement stmt = conn.prepareStatement("SELECT password FROM users WHERE username = ?")) {
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            String storedHash = rs.getString("password"); // Obtém a senha criptografada do banco de dados
+            System.out.println("Stored Hash: " + storedHash); // Adiciona um log para verificar a senha armazenada
+            if (BCrypt.checkpw(password, storedHash)) { // Verifica a senha inserida com a senha armazenada usando BCrypt
+                System.out.println("Login successful.");
+                return true;
             } else {
                 System.out.println("Invalid username or password.");
                 return false;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            System.out.println("Invalid username or password.");
             return false;
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
     }
 
     public void listUsers() {
